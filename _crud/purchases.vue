@@ -1,11 +1,16 @@
-<template></template>
+<template>
+  <purchase-modal v-model="show" :title="$tr('iaccounting.cms.title.newPurchase')" />
+</template>
 <script>
+import purchaseModal from '../_components/purchaseModal/index.vue'
 export default {
   data() {
     return {
-      crudId: this.$uid()
+      crudId: this.$uid(),
+      show: false
     }
   },
+  components: {purchaseModal},
   computed: {
     crudData() {
       return {
@@ -14,7 +19,7 @@ export default {
         apiRoute: 'apiRoutes.qaccounting.purchases',
         permission: 'iaccounting.purchases',
         create: {
-          title: this.$tr('iaccounting.cms.title.newPurchase'),
+          method: (item) => this.openModal(item)
         },
         read: {
           columns: [
@@ -58,5 +63,10 @@ export default {
       return this.$store.state.qcrudComponent.component[this.crudId] || {}
     }
   },
+  methods: {
+    openModal(item) {
+      this.show = true
+    }
+  }
 }
 </script>
