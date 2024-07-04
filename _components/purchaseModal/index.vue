@@ -1,6 +1,6 @@
 <template>
   <master-modal v-model="show" custom-position v-bind="modalProps" @hide="closeModal">
-    <dynamic-form v-model="formData" :loading="loading" :blocks="fields" />
+    <dynamic-form v-model="formData" :blocks="fields" hide-progress-bar no-actions ref="refForm" />
   </master-modal>
 </template>
 <script lang="ts">
@@ -18,5 +18,5 @@ export default defineComponent({
   }
 })
 </script>
-<style lang="stylus">
+<style lang="scss">
 </style>

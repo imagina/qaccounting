@@ -1,16 +1,19 @@
-import {computed, reactive, onMounted, toRefs, watch} from "vue";
+import {computed, reactive, onMounted, toRefs, watch, onUnmounted, ref} from "vue";
 import service from './services'
 import {i18n, clone, alert} from 'src/plugins/utils'
 
 export default function controller(props: any, emit: any) {
   // Refs
-  const refs = {}
+  const refs = {
+    refForm: ref()
+  }
 
   // States
   const state = reactive({
     show: false,
     formData: {},
-    loading: false
+    loading: false,
+    n8nData: null
   })
 
   // Computed
@@ -19,163 +22,96 @@ export default function controller(props: any, emit: any) {
       //Validate params props
       if (!state.show) return {}
 
-      //Response
-      return {
-        title: props.title,
-        width: 'max-content',
-        loading: state.loading,
-        actions: []
-      }
-    }),
-    dynamicForm: computed(() =>{
-      //Instace response
-      let response = {
-        actions: {
-          submit: {
-            label: i18n.tr('iprofile.cms.label.save'),
-            color: 'primary',
-            icon: null
-          },
-          next: {
-            label: i18n.tr('iprofile.cms.label.save'),
-            color: 'primary',
-            icon: null
-          }
-        },
-        blocks: [
-          {
-            //title: 'Main Block',
-            name: 'main',
-            fields: {
-              email: {
-                value: null,
-                type: 'input',
-                colClass: 'col-12',
-                props: {
-                  label: `${this.$tr('isite.cms.form.email')}*`,
-                  rules: [
-                    val => !!val || this.$tr('isite.cms.message.fieldRequired'),
-                    val => this.$helper.validateEmail(val) || this.$tr('isite.cms.message.fieldEmail')
-                  ]
-                }
-              },
-              password: {
-                value: null,
-                type: 'input',
-                colClass: 'col-12',
-                props: {
-                  label: `${this.$tr('isite.cms.form.password')}*`,
-                  type: 'password',
-                  vIf: this.form.changePassword,
-                  rules: [
-                    val => !!val || this.$tr('isite.cms.message.fieldRequired'),
-                    val => val.length >= 6 || this.$tr('isite.cms.message.fieldMinLeng', {num: 6})
-                  ]
-                }
-              },
-              passwordConfirmation: {
-                value: null,
-                type: 'input',
-                colClass: 'col-12',
-                props: {
-                  label: `${this.$tr('isite.cms.form.checkPassword')}*`,
-                  type: 'password',
-                  vIf: this.form.changePassword,
-                  rules: [
-                    val => !!val || this.$tr('isite.cms.message.fieldRequired'),
-                    val => (this.form['main-password'] == val) || this.$tr('isite.cms.message.fieldCheckPassword'),
-                  ]
-                }
-              },
-              ...(this.termsAndConditions ? {terms: this.termsAndConditions} : {})
-            }
-          },
-          ...this.$clone(this.extraBlocks)
-        ]
-      }
+      const existn8nData = !!state.n8nData
 
-      //Add blocks to auth roles
-      if (this.authRoles && (this.authRoles.length >= 2)) {
-        response.blocks.unshift({
-          //title: 'Role Block',
-          name: 'role',
-          fields: {
-            roleId: {
-              value: null,
-              type: 'optionGroup',
-              colClass: 'col-12',
-              props: {
-                options: this.authRoles.map(item => {
-                  return {label: `${this.$tr('iprofile.cms.label.registerAs')} ${item.name}`, value: item.id}
-                }),
-                color: 'secondary',
-                rules: [val => !!val || this.$tr('isite.cms.message.fieldRequired')]
-              }
-            }
+      const title = existn8nData ? 'Corrobora la informacion' : props.title
+
+      const actions = [
+        {
+          action: () => methods.closeModal(),
+          props: {
+            color: 'grey-5',
+            label: i18n.tr('isite.cms.label.cancel'),
+          }
+        }
+      ]
+
+      if (existn8nData) {
+        actions.push({
+          action: () => refs.refForm.value.changeStep('next', true),
+          props: {
+            color: 'primary',
+            label: i18n.tr('isite.cms.label.save'),
+          }
+        })
+      } else {
+        actions.push({
+          action: () => methods.sendImage(),
+          props: {
+            color: 'primary',
+            label: i18n.tr('isite.cms.label.upload'),
           }
         })
       }
 
-      //concat block name to fields
-      response.blocks.forEach((block, blockKey) => {
-        let fields = {}
-        Object.keys(block.fields).forEach(fieldKey =>
-          fields[`${block.name}-${fieldKey}`] = {...block.fields[fieldKey], name: `${block.name}-${fieldKey}`}
-        )
-        response.blocks[blockKey].fields = fields
-      })
-
       //Response
-      return response
+      return {
+        title,
+        width: 'max-content',
+        persistent: true,
+        loading: state.loading,
+        actions
+      }
     }),
     fields: computed(() => {
       //Validate params props
       if (!state.show) return []
 
-      //Response
-      return [
-        {
-          name: 'main',
-          title: "Sube tu documento",
-          description: "Puedes subir imagenes, pdf, docx, etc",
-          fields: {
-            mediasSingle: {
-              name: 'mediasSingle',
-              value: {},
-              type: 'media',
-              props: {
-                label: i18n.tr('isite.cms.form.firstImage'),
-                zone: 'mainimage',
-                entity: "Modules\\Iaccounting\\Entities\\Purchase",
-                entityId: null
-              }
-            },
-          }
-        },
-        {
-          name: 'purchase',
-          title: "Corrobora la informacion",
-          description: "Asegurate que la información proporcionada es la correcta",
-          fields: {
-            mediasSingle: {
-              name: 'mediasSingle',
-              value: {},
-              type: 'media',
-              props: {
-                label: i18n.tr('isite.cms.form.firstImage'),
-                zone: 'mainimage',
-                entity: "Modules\\Iaccounting\\Entities\\Purchase",
-                entityId: null
-              }
-            },
+      const existn8nData = !!state.n8nData
+
+      let description = existn8nData ? "Asegurate que la información proporcionada es la correcta" : 'Puedes subir imagenes, pdf, docx, etc'
+
+      let fields = {
+        mediasSingle: {
+          name: 'mediasSingle',
+          value: {},
+          required: true,
+          type: 'media',
+          props: {
+            label: i18n.tr('isite.cms.form.firstImage'),
+            zone: 'mainimage',
+            entity: "Modules\\Iaccounting\\Entities\\Purchase",
+            entityId: null
           }
         }
-      ]
+      }
+
+      //Response
+      return [{description, fields}]
     })
   }
 
   // Methods
   const methods = {
+    sendImage: async () => {
+      const data: any = state.formData
+      if (data?.mediasSingle?.mainimage || true) {
+        state.loading = true
+
+        const attributes = {
+          imageId: data?.mediasSingle?.mainimage
+        }
+
+        //Create purchase support
+        await service.sendN8NImg({attributes}).then(response => {
+          state.n8nData = response
+        }).catch(() => {
+          alert.error({message: i18n.tr('isite.cms.message.errorRequest')});
+        })
+
+        state.loading = false
+      }
+    },
     //Update block
     createItem: () => {
       if (state.formData) {
@@ -197,8 +133,10 @@ export default function controller(props: any, emit: any) {
       state.show = false
       state.formData = {};
       state.loading = false;
-      state.fields = []
     },
+    isValidField(val) {
+      console.warn(val)
+    }
   }
 
   // Mounted
@@ -210,7 +148,7 @@ export default function controller(props: any, emit: any) {
   })
 
   watch(() => state.show, (newValue) => {
-    emit('input', newValue)
+    emit('update:modelValue', newValue)
   })
 
   return {...refs, ...(toRefs(state)), ...computeds, ...methods}
