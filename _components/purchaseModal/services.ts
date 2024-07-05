@@ -16,8 +16,6 @@ export default {
       }
       //Request
       baseService.post(route, body).then(response => {
-
-        console.warn("Response: ",response)
         resolve(response);
       }).catch(error => reject(error));
     })
@@ -26,11 +24,11 @@ export default {
     return new Promise((resolve, reject) => {
       //Params
       let requestParams = {
-        notToSnakeCase: [],
+        notToSnakeCase: ['invoice_items'],
         ...params
       }
       //Request
-      baseService.create('apiRoutes.q.blocks', data, requestParams).then(response => {
+      baseService.create('apiRoutes.qaccounting.purchases', data, requestParams).then(response => {
         resolve(true);
       }).catch(error => reject(error));
     })

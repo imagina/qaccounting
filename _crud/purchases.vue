@@ -1,16 +1,13 @@
 <template>
-  <purchase-modal v-model="show" :title="$tr('iaccounting.cms.title.newPurchase')" />
 </template>
 <script>
-import purchaseModal from '../_components/purchaseModal/index.vue'
 export default {
   data() {
     return {
       crudId: this.$uid(),
-      show: false
     }
   },
-  components: {purchaseModal},
+  components: {},
   computed: {
     crudData() {
       return {
@@ -18,30 +15,27 @@ export default {
         entityName: config("main.qaccounting.entityNames.purchase"),
         apiRoute: 'apiRoutes.qaccounting.purchases',
         permission: 'iaccounting.purchases',
-        create: {
-          method: (item) => this.openModal(item)
-        },
+        create: {},
         read: {
           columns: [
             {name: 'id', label: this.$tr('isite.cms.form.id'), field: 'id', align: 'left'},
             {
-              name: 'user_id',
-              label: this.$tr('isite.cms.form.provider(PT)'),
-              field: 'user',
-              align: 'rigth',
-              format: (u) => u?.firstName || '-'
+              name: 'provider_name',
+              label: this.$tr('iaccounting.cms.form.providerName'),
+              field: 'providerName',
+              align: 'center'
             },
             {
               name: 'payment_method',
-              label: this.$tr('isite.cms.form.paymentMethod(PT)'),
+              label: this.$tr('isite.cms.label.paymentMethod'),
               field: 'paymentMethod',
               align: 'left'
             },
-            {name: 'subtotal', label: this.$tr('isite.cms.form.subtotal(PT)'), field: 'subtotal', align: 'left'},
-            {name: 'total', label: this.$tr('isite.cms.form.total(PT)'), field: 'total', align: 'rigth'},
+            {name: 'subtotal', label: this.$tr('iaccounting.cms.form.subtotal'), field: 'subtotal', align: 'left'},
+            {name: 'total', label: this.$tr('iaccounting.cms.form.total'), field: 'total', align: 'rigth'},
             {
               name: 'elaboration_date',
-              label: this.$tr('isite.cms.form.elaborationDate(PT)'),
+              label: this.$tr('iaccounting.cms.form.elaborationDate'),
               field: 'elaborationDate',
               align: 'left',
               format: val => val ? this.$trd(val) : '-',
@@ -61,11 +55,6 @@ export default {
     //Crud info
     crudInfo() {
       return this.$store.state.qcrudComponent.component[this.crudId] || {}
-    }
-  },
-  methods: {
-    openModal(item) {
-      this.show = true
     }
   }
 }

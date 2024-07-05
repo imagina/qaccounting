@@ -24,7 +24,7 @@ export default function controller(props: any, emit: any) {
 
       const existn8nData = !!state.n8nData
 
-      const title = existn8nData ? 'Corrobora la informacion' : props.title
+      const title = existn8nData ? i18n.tr('iaccounting.cms.title.verifyDocument') : props.title
 
       const actions = [
         {
@@ -49,7 +49,7 @@ export default function controller(props: any, emit: any) {
           action: () => methods.sendImage(),
           props: {
             color: 'primary',
-            label: i18n.tr('isite.cms.label.upload'),
+            label: i18n.tr('isite.cms.message.uploadFile'),
           }
         })
       }
@@ -69,16 +69,16 @@ export default function controller(props: any, emit: any) {
 
       const existn8nData = !!state.n8nData
 
-      let description = existn8nData ? "Asegurate que la información proporcionada es la correcta" : 'Puedes subir imagenes, pdf, docx, etc'
+      let description = existn8nData ? i18n.tr('iaccounting.cms.messages.descriptionValidate') : i18n.tr('iaccounting.cms.messages.descriptionAnalyze')
 
-      let fields = {
+      let fields: any = {
         mediasSingle: {
           name: 'mediasSingle',
           value: {},
           required: true,
           type: 'media',
           props: {
-            label: i18n.tr('isite.cms.form.firstImage'),
+            label: i18n.tr('iaccounting.cms.form.documentAnalysis'),
             zone: 'mainimage',
             entity: "Modules\\Iaccounting\\Entities\\Purchase",
             entityId: null
@@ -86,6 +86,112 @@ export default function controller(props: any, emit: any) {
         }
       }
 
+      if (existn8nData) {
+        fields = {
+          documentType: {
+            value: 'supportDocument',
+            type: 'select',
+            props: {
+              label: `${i18n.tr('iaccounting.cms.form.documentType')}*`,
+              options: [
+                {label: i18n.tr('iaccounting.cms.label.documentSupport'), value: 'supportDocument'},
+                {label: i18n.tr('iaccounting.cms.label.electronicInvoice'), value: 'electronicInvoice'}
+              ],
+              rules: [
+                val => !!val || i18n.tr('isite.cms.message.fieldRequired')
+              ]
+            }
+          },
+          providerName: {
+            value: '',
+            type: 'input',
+            props: {
+              label: `${i18n.tr('iaccounting.cms.form.providerName')}*`,
+              rules: [
+                val => !!val || i18n.tr('isite.cms.message.fieldRequired')
+              ]
+            }
+          },
+
+          providerIdType: {
+            value: 'NIT',
+            type: 'select',
+            props: {
+              label: `${i18n.tr('iaccounting.cms.form.providerIdType')}*`,
+              options: [
+                {label: 'Cedula de Ciudadania', value: 'CC'},
+                {label: 'Número de Identificación Tributaria (NIT)', value: 'NIT'}
+              ],
+              rules: [
+                val => !!val || i18n.tr('isite.cms.message.fieldRequired')
+              ]
+            }
+          },
+          providerIdNumber: {
+            value: '',
+            type: 'input',
+            props: {
+              label: `${i18n.tr('iaccounting.cms.form.providerIdNumber')}*`,
+              rules: [
+                val => !!val || i18n.tr('isite.cms.message.fieldRequired')
+              ]
+            }
+          },
+
+          elaborationDate: {
+            value: null,
+            type: 'date',
+            props: {
+              label: i18n.tr('iaccounting.cms.form.elaborationDate') + '*',
+              rules: [
+                val => !!val || i18n.tr('isite.cms.message.fieldRequired')
+              ]
+            }
+          },
+          currencyCode: {
+            value: 'COP',
+            type: 'input',
+            props: {
+              label: i18n.tr('iaccounting.cms.form.currencyCode')
+            }
+          },
+
+          totalTax: {
+            value: 0,
+            type: 'input',
+            props: {
+              type: 'number',
+              label: i18n.tr('iaccounting.cms.form.totalTax')
+            }
+          },
+          discount: {
+            value: 0,
+            type: 'input',
+            fakeFieldName: 'options',
+            props: {
+              type: 'number',
+              label: i18n.tr('iaccounting.cms.form.discount')
+            }
+          },
+
+          subtotal: {
+            value: 0,
+            type: 'input',
+            props: {
+              type: 'number',
+              label: i18n.tr('iaccounting.cms.form.subtotal')
+            }
+          },
+          total: {
+            value: 0,
+            type: 'input',
+            props: {
+              type: 'number',
+              label: i18n.tr('iaccounting.cms.form.total')
+            }
+          },
+        }
+      }
       //Response
       return [{description, fields}]
     })
@@ -103,9 +209,16 @@ export default function controller(props: any, emit: any) {
         }
 
         //Create purchase support
-        await service.sendN8NImg({attributes}).then(response => {
-          state.n8nData = response
-        }).catch(() => {
+        await service.sendN8NImg({attributes}).then((response: any) => {
+          state.n8nData = {
+            ...data,
+            ...response
+          }
+
+          setTimeout(() => {
+            state.formData = response
+          },0)
+        }).catch((error) => {
           alert.error({message: i18n.tr('isite.cms.message.errorRequest')});
         })
 
@@ -115,10 +228,15 @@ export default function controller(props: any, emit: any) {
     //Update block
     createItem: () => {
       if (state.formData) {
+        const dataToCreate = {
+          ...state.n8nData,
+          ...state.formData
+        }
+
         state.loading = true
 
         //Create purchase support
-        service.createItem(state.formData).then(response => {
+        service.createItem(dataToCreate).then(response => {
           alert.info({message: i18n.tr('isite.cms.message.recordCreated')});
           //Emit info to Editor and Close Modal
           emit('create')
@@ -133,9 +251,7 @@ export default function controller(props: any, emit: any) {
       state.show = false
       state.formData = {};
       state.loading = false;
-    },
-    isValidField(val) {
-      console.warn(val)
+      state.n8nData = null
     }
   }
 

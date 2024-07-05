@@ -1,6 +1,6 @@
 <template>
   <master-modal v-model="show" custom-position v-bind="modalProps" @hide="closeModal">
-    <dynamic-form v-model="formData" :blocks="fields" hide-progress-bar no-actions ref="refForm" />
+    <dynamic-form v-model="formData" :blocks="fields" hide-progress-bar no-actions ref="refForm" @submit="createItem" />
   </master-modal>
 </template>
 <script lang="ts">
@@ -13,6 +13,7 @@ export default defineComponent({
     title: {default: ''}
   },
   components: {},
+  emits: ['create', 'update:modelValue'],
   setup(props, {emit}) {
     return controller(props, emit)
   }
