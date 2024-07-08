@@ -1,6 +1,6 @@
 <template>
   <div>
-    <purchase-modal v-model="show" :title="$tr('iaccounting.cms.title.uploadDocument')" @create="getDataTable" />
+    <purchase-modal v-model="show" :title="modalTitle" @create="getDataTable" :item="item" />
 
     <crud
       ref="crudComponent"

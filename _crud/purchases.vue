@@ -23,7 +23,8 @@ export default {
               name: 'provider_name',
               label: this.$tr('iaccounting.cms.form.providerName'),
               field: 'providerName',
-              align: 'center'
+              align: 'center',
+              action: 'edit'
             },
             {
               name: 'payment_method',
@@ -47,7 +48,7 @@ export default {
             {name: 'actions', label: this.$tr('isite.cms.form.actions'), align: 'left'},
           ],
         },
-        update: false,
+        update: {},
         delete: true,
         formLeft: {}
       }

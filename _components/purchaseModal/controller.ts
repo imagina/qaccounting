@@ -23,6 +23,7 @@ export default function controller(props: any, emit: any) {
       if (!state.show) return {}
 
       const existn8nData = !!state.n8nData
+      const existItem = !!props.item?.id
 
       const title = existn8nData ? i18n.tr('iaccounting.cms.title.verifyDocument') : props.title
 
@@ -36,20 +37,12 @@ export default function controller(props: any, emit: any) {
         }
       ]
 
-      if (existn8nData) {
+      if (!existItem) {
         actions.push({
-          action: () => refs.refForm.value.changeStep('next', true),
+          action: () => existn8nData ? refs.refForm.value.changeStep('next', true) : methods.sendImage(),
           props: {
             color: 'primary',
-            label: i18n.tr('isite.cms.label.save'),
-          }
-        })
-      } else {
-        actions.push({
-          action: () => methods.sendImage(),
-          props: {
-            color: 'primary',
-            label: i18n.tr('isite.cms.message.uploadFile'),
+            label: i18n.tr(existn8nData ? 'isite.cms.label.save' : 'isite.cms.message.uploadFile'),
           }
         })
       }
@@ -68,8 +61,13 @@ export default function controller(props: any, emit: any) {
       if (!state.show) return []
 
       const existn8nData = !!state.n8nData
+      const existItem = !!props.item?.id
 
-      let description = existn8nData ? i18n.tr('iaccounting.cms.messages.descriptionValidate') : i18n.tr('iaccounting.cms.messages.descriptionAnalyze')
+      let description = '';
+
+      if (!existItem) {
+        description = existn8nData ? i18n.tr('iaccounting.cms.messages.descriptionValidate') : i18n.tr('iaccounting.cms.messages.descriptionAnalyze')
+      }
 
       let fields: any = {
         mediasSingle: {
@@ -86,7 +84,7 @@ export default function controller(props: any, emit: any) {
         }
       }
 
-      if (existn8nData) {
+      if (existn8nData || existItem) {
         fields = {
           documentType: {
             value: 'supportDocument',
@@ -97,6 +95,7 @@ export default function controller(props: any, emit: any) {
                 {label: i18n.tr('iaccounting.cms.label.documentSupport'), value: 'supportDocument'},
                 {label: i18n.tr('iaccounting.cms.label.electronicInvoice'), value: 'electronicInvoice'}
               ],
+              readonly: existItem,
               rules: [
                 val => !!val || i18n.tr('isite.cms.message.fieldRequired')
               ]
@@ -107,6 +106,7 @@ export default function controller(props: any, emit: any) {
             type: 'input',
             props: {
               label: `${i18n.tr('iaccounting.cms.form.providerName')}*`,
+              readonly: existItem,
               rules: [
                 val => !!val || i18n.tr('isite.cms.message.fieldRequired')
               ]
@@ -122,6 +122,7 @@ export default function controller(props: any, emit: any) {
                 {label: 'Cedula de Ciudadania', value: 'CC'},
                 {label: 'Número de Identificación Tributaria (NIT)', value: 'NIT'}
               ],
+              readonly: existItem,
               rules: [
                 val => !!val || i18n.tr('isite.cms.message.fieldRequired')
               ]
@@ -132,6 +133,7 @@ export default function controller(props: any, emit: any) {
             type: 'input',
             props: {
               label: `${i18n.tr('iaccounting.cms.form.providerIdNumber')}*`,
+              readonly: existItem,
               rules: [
                 val => !!val || i18n.tr('isite.cms.message.fieldRequired')
               ]
@@ -143,6 +145,7 @@ export default function controller(props: any, emit: any) {
             type: 'date',
             props: {
               label: i18n.tr('iaccounting.cms.form.elaborationDate') + '*',
+              readonly: existItem,
               rules: [
                 val => !!val || i18n.tr('isite.cms.message.fieldRequired')
               ]
@@ -152,7 +155,8 @@ export default function controller(props: any, emit: any) {
             value: 'COP',
             type: 'input',
             props: {
-              label: i18n.tr('iaccounting.cms.form.currencyCode')
+              label: i18n.tr('iaccounting.cms.form.currencyCode'),
+              readonly: existItem,
             }
           },
 
@@ -161,7 +165,8 @@ export default function controller(props: any, emit: any) {
             type: 'input',
             props: {
               type: 'number',
-              label: i18n.tr('iaccounting.cms.form.totalTax')
+              label: i18n.tr('iaccounting.cms.form.totalTax'),
+              readonly: existItem,
             }
           },
           discount: {
@@ -170,7 +175,8 @@ export default function controller(props: any, emit: any) {
             fakeFieldName: 'options',
             props: {
               type: 'number',
-              label: i18n.tr('iaccounting.cms.form.discount')
+              label: i18n.tr('iaccounting.cms.form.discount'),
+              readonly: existItem,
             }
           },
 
@@ -179,7 +185,8 @@ export default function controller(props: any, emit: any) {
             type: 'input',
             props: {
               type: 'number',
-              label: i18n.tr('iaccounting.cms.form.subtotal')
+              label: i18n.tr('iaccounting.cms.form.subtotal'),
+              readonly: existItem,
             }
           },
           total: {
@@ -187,7 +194,8 @@ export default function controller(props: any, emit: any) {
             type: 'input',
             props: {
               type: 'number',
-              label: i18n.tr('iaccounting.cms.form.total')
+              label: i18n.tr('iaccounting.cms.form.total'),
+              readonly: existItem,
             }
           },
         }
@@ -217,7 +225,7 @@ export default function controller(props: any, emit: any) {
 
           setTimeout(() => {
             state.formData = response
-          },0)
+          }, 0)
         }).catch((error) => {
           alert.error({message: i18n.tr('isite.cms.message.errorRequest')});
         })
@@ -252,6 +260,9 @@ export default function controller(props: any, emit: any) {
       state.formData = {};
       state.loading = false;
       state.n8nData = null
+    },
+    setItem() {
+      if (props.item) state.formData = props.item
     }
   }
 

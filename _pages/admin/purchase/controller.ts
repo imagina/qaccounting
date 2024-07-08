@@ -1,6 +1,7 @@
 import { reactive, toRefs, computed, ref } from 'vue';
 // @ts-ignore
 import crud from 'src/modules/qcrud/_components/crud.vue';
+import {i18n} from 'src/plugins/utils'
 
 export default function controller() {
 
@@ -11,7 +12,9 @@ export default function controller() {
 
   // States
   const state = reactive({
-    show: false
+    show: false,
+    item: null,
+    modalTitle: i18n.tr('iaccounting.cms.title.uploadDocument')
   });
 
   // Computed
@@ -21,13 +24,18 @@ export default function controller() {
         create: {
           method: () => methods.openModal()
         },
+        update: {
+          method: (item: any) => methods.openModal(item)
+        },
       };
     })
   };
 
   // Methods
   const methods = {
-    openModal() {
+    openModal(item = null) {
+      state.item = item
+      state.modalTitle = i18n.tr('iaccounting.cms.title.infoDocument')
       state.show = true
     },
     async getDataTable(refresh = true) {
