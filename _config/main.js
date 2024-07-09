@@ -2,6 +2,8 @@ export default {
   moduleName: 'iaccounting',
   //Entities
   entityNames: {
-    purchase: 'purchase'
+    purchase: 'purchase',
+    accountingAccount: 'accountingAccount',
+    provider: 'provider'
   },
 }
