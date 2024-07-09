@@ -22,10 +22,10 @@ export default {
           columns: [
             {name: 'id', label: this.$tr('isite.cms.form.id'), field: 'id', align: 'left'},
             {name: 'name', label: this.$tr('isite.cms.form.name'), field: 'name', align: 'rigth'},
-            {name: 'type_id', label: this.$tr('isite.cms.form.typeId(PT)'), field: 'typeId', align: 'rigth'},
+            {name: 'type_id', label: this.$tr('iaccounting.cms.form.idType'), field: 'typeId', align: 'rigth'},
             {
               name: 'identification',
-              label: this.$tr('isite.cms.form.identification(PT)'),
+              label: this.$tr('iaccounting.cms.form.idNumber'),
               field: 'identification',
               align: 'rigth'
             },
@@ -41,7 +41,7 @@ export default {
           ]
         },
         update: {
-          title: this.$tr('iaccounting.cms.title.updateProviders'),
+          title: this.$tr('iaccounting.cms.title.updateProvider'),
         },
         delete: true,
         formLeft: {
@@ -70,7 +70,7 @@ export default {
             value: '',
             type: 'input',
             props: {
-              label: this.$tr('isite.cms.form.typeId(PT)'),
+              label: this.$tr('iaccounting.cms.form.idType'),
               rules: [
                 val => !!val || this.$tr('isite.cms.message.fieldRequired')
               ],
@@ -80,7 +80,7 @@ export default {
             value: '',
             type: 'input',
             props: {
-              label: this.$tr('isite.cms.form.identification(PT)'),
+              label: this.$tr('iaccounting.cms.form.idNumber'),
               rules: [
                 val => !!val || this.$tr('isite.cms.message.fieldRequired')
               ],

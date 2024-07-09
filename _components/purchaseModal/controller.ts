@@ -1,4 +1,4 @@
-import {computed, reactive, onMounted, toRefs, watch, onUnmounted, ref} from "vue";
+import {computed, reactive, onMounted, toRefs, watch, ref} from "vue";
 import service from './services'
 import {i18n, clone, alert} from 'src/plugins/utils'
 
@@ -60,13 +60,13 @@ export default function controller(props: any, emit: any) {
       //Validate params props
       if (!state.show) return []
 
-      const existn8nData = !!state.n8nData
+      const n8nData = state.n8nData
       const existItem = !!props.item?.id
 
       let description = '';
 
       if (!existItem) {
-        description = existn8nData ? i18n.tr('iaccounting.cms.messages.descriptionValidate') : i18n.tr('iaccounting.cms.messages.descriptionAnalyze')
+        description = !!n8nData ? i18n.tr('iaccounting.cms.messages.descriptionValidate') : i18n.tr('iaccounting.cms.messages.descriptionAnalyze')
       }
 
       let fields: any = {
@@ -84,10 +84,45 @@ export default function controller(props: any, emit: any) {
         }
       }
 
-      if (existn8nData || existItem) {
+      if (!!n8nData || existItem || true) {
         fields = {
+          providerIdNumber: {
+            value: '',
+            type: 'input',
+            fakeFieldName: 'options',
+            props: {
+              label: `${i18n.tr('iaccounting.cms.form.providerIdNumber')}*`,
+              readonly: true,
+              rules: [
+                (val: any) => !!val || i18n.tr('isite.cms.message.fieldRequired')
+              ]
+            }
+          },
+          providerId: {
+            type: 'crud',
+            permission: 'iaccounting.providers.manage',
+            props: {
+              readonly: existItem,
+              crudType: 'select',
+              //@ts-ignore
+              crudData: import('src/modules/qaccounting/_crud/providers.vue'),
+              crudProps: {
+                label: `${i18n.tr('isite.cms.label.provider')}*`,
+                rules: [
+                  (val: any) => !!val || i18n.tr('isite.cms.message.fieldRequired')
+                ],
+              },
+              config: {
+                options: {
+                  label: 'name', value: 'id'
+                },
+                loadedOptions: (items) => console.warn("ITEMS: ",{items})
+              }
+            },
+          },
+
           documentType: {
-            value: 'supportDocument',
+            value: 'electronicInvoice',
             type: 'select',
             props: {
               label: `${i18n.tr('iaccounting.cms.form.documentType')}*`,
@@ -97,48 +132,11 @@ export default function controller(props: any, emit: any) {
               ],
               readonly: existItem,
               rules: [
-                val => !!val || i18n.tr('isite.cms.message.fieldRequired')
-              ]
-            }
-          },
-          providerName: {
-            value: '',
-            type: 'input',
-            props: {
-              label: `${i18n.tr('iaccounting.cms.form.providerName')}*`,
-              readonly: existItem,
-              rules: [
-                val => !!val || i18n.tr('isite.cms.message.fieldRequired')
+                (val: any) => !!val || i18n.tr('isite.cms.message.fieldRequired')
               ]
             }
           },
 
-          providerIdType: {
-            value: 'NIT',
-            type: 'select',
-            props: {
-              label: `${i18n.tr('iaccounting.cms.form.providerIdType')}*`,
-              options: [
-                {label: 'Cedula de Ciudadania', value: 'CC'},
-                {label: 'Número de Identificación Tributaria (NIT)', value: 'NIT'}
-              ],
-              readonly: existItem,
-              rules: [
-                val => !!val || i18n.tr('isite.cms.message.fieldRequired')
-              ]
-            }
-          },
-          providerIdNumber: {
-            value: '',
-            type: 'input',
-            props: {
-              label: `${i18n.tr('iaccounting.cms.form.providerIdNumber')}*`,
-              readonly: existItem,
-              rules: [
-                val => !!val || i18n.tr('isite.cms.message.fieldRequired')
-              ]
-            }
-          },
 
           elaborationDate: {
             value: null,
@@ -147,7 +145,7 @@ export default function controller(props: any, emit: any) {
               label: i18n.tr('iaccounting.cms.form.elaborationDate') + '*',
               readonly: existItem,
               rules: [
-                val => !!val || i18n.tr('isite.cms.message.fieldRequired')
+                (val: any) => !!val || i18n.tr('isite.cms.message.fieldRequired')
               ]
             }
           },
@@ -163,6 +161,7 @@ export default function controller(props: any, emit: any) {
           totalTax: {
             value: 0,
             type: 'input',
+            fakeFieldName: 'options',
             props: {
               type: 'number',
               label: i18n.tr('iaccounting.cms.form.totalTax'),
@@ -226,7 +225,7 @@ export default function controller(props: any, emit: any) {
           setTimeout(() => {
             state.formData = response
           }, 0)
-        }).catch((error) => {
+        }).catch(() => {
           alert.error({message: i18n.tr('isite.cms.message.errorRequest')});
         })
 
@@ -244,7 +243,7 @@ export default function controller(props: any, emit: any) {
         state.loading = true
 
         //Create purchase support
-        service.createItem(dataToCreate).then(response => {
+        service.createItem(dataToCreate).then(() => {
           alert.info({message: i18n.tr('isite.cms.message.recordCreated')});
           //Emit info to Editor and Close Modal
           emit('create')
