@@ -1,5 +1,6 @@
 import {computed, reactive, onMounted, toRefs, watch, ref} from "vue";
 import service from './services'
+//@ts-ignore
 import {i18n, clone, alert} from 'src/plugins/utils'
 
 export default function controller(props: any, emit: any) {
@@ -11,9 +12,10 @@ export default function controller(props: any, emit: any) {
   // States
   const state = reactive({
     show: false,
-    formData: {},
+    formData: null,
     loading: false,
-    n8nData: null
+    n8nData: null,
+    loadOptionsCrud: []
   })
 
   // Computed
@@ -84,21 +86,9 @@ export default function controller(props: any, emit: any) {
         }
       }
 
-      if (!!n8nData || existItem || true) {
+      if (!!n8nData || existItem) {
         fields = {
-          providerIdNumber: {
-            value: '',
-            type: 'input',
-            fakeFieldName: 'options',
-            props: {
-              label: `${i18n.tr('iaccounting.cms.form.providerIdNumber')}*`,
-              readonly: true,
-              rules: [
-                (val: any) => !!val || i18n.tr('isite.cms.message.fieldRequired')
-              ]
-            }
-          },
-          providerId: {
+          identification: {
             type: 'crud',
             permission: 'iaccounting.providers.manage',
             props: {
@@ -106,6 +96,44 @@ export default function controller(props: any, emit: any) {
               crudType: 'select',
               //@ts-ignore
               crudData: import('src/modules/qaccounting/_crud/providers.vue'),
+              customData: {
+                formLeft: {
+                  name: {
+                    value: n8nData?.provider?.name,
+                    type: 'input',
+                    props: {
+                      label: `${i18n.tr('isite.cms.form.name')}*`,
+                      rules: [
+                        val => !!val || i18n.tr('isite.cms.message.fieldRequired')
+                      ],
+                    },
+                  },
+                  typeId: {
+                    value: n8nData?.provider?.typeOfDocument || 'NIT',
+                    type: 'select',
+                    props: {
+                      label: i18n.tr('iaccounting.cms.form.idType'),
+                      options: [
+                        {label: 'Cedula de Ciudadania', value: 'CC'},
+                        {label: 'Número de Identificación Tributaria (NIT)', value: 'NIT'}
+                      ],
+                      rules: [
+                        val => !!val || i18n.tr('isite.cms.message.fieldRequired')
+                      ],
+                    }
+                  },
+                  identification: {
+                    value: n8nData?.provider?.identification,
+                    type: 'input',
+                    props: {
+                      label: i18n.tr('iaccounting.cms.form.idNumber'),
+                      rules: [
+                        val => !!val || i18n.tr('isite.cms.message.fieldRequired')
+                      ],
+                    }
+                  },
+                }
+              },
               crudProps: {
                 label: `${i18n.tr('isite.cms.label.provider')}*`,
                 rules: [
@@ -113,14 +141,14 @@ export default function controller(props: any, emit: any) {
                 ],
               },
               config: {
+                filterByQuery: true,
                 options: {
-                  label: 'name', value: 'id'
+                  label: 'name', value: 'identification',
                 },
-                loadedOptions: (items) => console.warn("ITEMS: ",{items})
-              }
+                loadedOptions: (val: any[]) => state.loadOptionsCrud = val
+              },
             },
           },
-
           documentType: {
             value: 'electronicInvoice',
             type: 'select',
@@ -196,7 +224,7 @@ export default function controller(props: any, emit: any) {
               label: i18n.tr('iaccounting.cms.form.total'),
               readonly: existItem,
             }
-          },
+          }
         }
       }
       //Response
@@ -256,7 +284,7 @@ export default function controller(props: any, emit: any) {
     },
     closeModal() {
       state.show = false
-      state.formData = {};
+      state.formData = null;
       state.loading = false;
       state.n8nData = null
     },
@@ -271,6 +299,14 @@ export default function controller(props: any, emit: any) {
 
   watch(() => props.modelValue, (newValue) => {
     state.show = clone(newValue);
+  })
+
+  watch(() => state.loadOptionsCrud, (newValue) => {
+    const identification = state.formData?.identification
+
+    const provider = newValue.find(p => p.identification == identification)
+
+    if(provider) state.n8nData = {... state.n8nData || {}, providerId: provider.id}
   })
 
   watch(() => state.show, (newValue) => {
