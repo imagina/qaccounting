@@ -1,6 +1,6 @@
 <template>
   <master-modal v-model="show" custom-position v-bind="modalProps" @hide="closeModal" @show="setItem">
-    <dynamic-form v-model="formData" :blocks="fields" hide-progress-bar no-actions ref="refForm" @submit="createItem"/>
+    <dynamic-form v-model="formData" :blocks="fields" hide-progress-bar no-actions ref="refForm" @submit="callMethods"/>
   </master-modal>
 </template>
 <script lang="ts">

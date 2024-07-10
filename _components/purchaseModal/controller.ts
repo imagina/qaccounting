@@ -41,7 +41,7 @@ export default function controller(props: any, emit: any) {
 
       if (!existItem) {
         actions.push({
-          action: () => existn8nData ? refs.refForm.value.changeStep('next', true) : methods.sendImage(),
+          action: () => refs.refForm.value.changeStep('next', true),
           props: {
             color: 'primary',
             label: i18n.tr(existn8nData ? 'isite.cms.label.save' : 'isite.cms.message.uploadFile'),
@@ -76,6 +76,7 @@ export default function controller(props: any, emit: any) {
           name: 'mediasSingle',
           value: {},
           required: true,
+          colClass: 'col-12',
           type: 'media',
           props: {
             label: i18n.tr('iaccounting.cms.form.documentAnalysis'),
@@ -87,68 +88,84 @@ export default function controller(props: any, emit: any) {
       }
 
       if (!!n8nData || existItem) {
+        let fieldName = existItem ? 'providerId' : 'identification'
         fields = {
-          identification: {
-            type: 'crud',
-            permission: 'iaccounting.providers.manage',
+          identificationCopy: {
+            type: 'copy',
+            vIf: !existItem,
             props: {
-              readonly: existItem,
-              crudType: 'select',
-              //@ts-ignore
-              crudData: import('src/modules/qaccounting/_crud/providers.vue'),
-              customData: {
-                formLeft: {
-                  name: {
-                    value: n8nData?.provider?.name,
-                    type: 'input',
-                    props: {
-                      label: `${i18n.tr('isite.cms.form.name')}*`,
-                      rules: [
-                        val => !!val || i18n.tr('isite.cms.message.fieldRequired')
-                      ],
-                    },
+              readonly: true,
+              label: i18n.tr('iaccounting.cms.form.idNumberN8N')
+            }
+          }
+        }
+
+        fields[fieldName] = {
+          type: 'crud',
+          permission: 'iaccounting.providers.manage',
+          props: {
+            crudType: 'select',
+            //@ts-ignore
+            crudData: import('src/modules/qaccounting/_crud/providers.vue'),
+            customData: {
+              formLeft: {
+                name: {
+                  value: n8nData?.provider?.name,
+                  type: 'input',
+                  props: {
+                    label: `${i18n.tr('isite.cms.form.name')}*`,
+                    rules: [
+                      val => !!val || i18n.tr('isite.cms.message.fieldRequired')
+                    ],
                   },
-                  typeId: {
-                    value: n8nData?.provider?.typeOfDocument || 'NIT',
-                    type: 'select',
-                    props: {
-                      label: i18n.tr('iaccounting.cms.form.idType'),
-                      options: [
-                        {label: 'Cedula de Ciudadania', value: 'CC'},
-                        {label: 'Número de Identificación Tributaria (NIT)', value: 'NIT'}
-                      ],
-                      rules: [
-                        val => !!val || i18n.tr('isite.cms.message.fieldRequired')
-                      ],
-                    }
-                  },
-                  identification: {
-                    value: n8nData?.provider?.identification,
-                    type: 'input',
-                    props: {
-                      label: i18n.tr('iaccounting.cms.form.idNumber'),
-                      rules: [
-                        val => !!val || i18n.tr('isite.cms.message.fieldRequired')
-                      ],
-                    }
-                  },
-                }
-              },
-              crudProps: {
-                label: `${i18n.tr('isite.cms.label.provider')}*`,
-                rules: [
-                  (val: any) => !!val || i18n.tr('isite.cms.message.fieldRequired')
-                ],
-              },
-              config: {
-                filterByQuery: true,
-                options: {
-                  label: 'name', value: 'identification',
                 },
-                loadedOptions: (val: any[]) => state.loadOptionsCrud = val
+                typeId: {
+                  value: n8nData?.provider?.typeOfDocument || 'NIT',
+                  type: 'select',
+                  props: {
+                    label: i18n.tr('iaccounting.cms.form.idType'),
+                    options: [
+                      {label: 'Cedula de Ciudadania', value: 'CC'},
+                      {label: 'Número de Identificación Tributaria (NIT)', value: 'NIT'}
+                    ],
+                    rules: [
+                      val => !!val || i18n.tr('isite.cms.message.fieldRequired')
+                    ],
+                  }
+                },
+                identification: {
+                  value: n8nData?.provider?.identification,
+                  type: 'input',
+                  props: {
+                    label: i18n.tr('iaccounting.cms.form.idNumber'),
+                    rules: [
+                      val => !!val || i18n.tr('isite.cms.message.fieldRequired')
+                    ],
+                  }
+                },
+              }
+            },
+            crudProps: {
+              label: `${i18n.tr('isite.cms.label.provider')}*`,
+              rules: [
+                (val: any) => !!val || i18n.tr('isite.cms.message.fieldRequired')
+              ],
+              clearable: true,
+              readonly: existItem
+            },
+            config: {
+              filterByQuery: true,
+              options: {
+                label: 'name', value: existItem ? 'id' : 'identification',
               },
+              loadedOptions: (val: any[]) => state.loadOptionsCrud = val
             },
           },
+        }
+
+        fields = {
+          ...fields,
+
           documentType: {
             value: 'electronicInvoice',
             type: 'select',
@@ -162,6 +179,15 @@ export default function controller(props: any, emit: any) {
               rules: [
                 (val: any) => !!val || i18n.tr('isite.cms.message.fieldRequired')
               ]
+            }
+          },
+          paymentMethod: {
+            value: '',
+            type: 'input',
+            required: true,
+            props: {
+              readonly: existItem,
+              label: i18n.tr('isite.cms.label.paymentMethod') + '*'
             }
           },
 
@@ -236,7 +262,7 @@ export default function controller(props: any, emit: any) {
   const methods = {
     sendImage: async () => {
       const data: any = state.formData
-      if (data?.mediasSingle?.mainimage || true) {
+      if (data?.mediasSingle?.mainimage) {
         state.loading = true
 
         const attributes = {
@@ -251,7 +277,7 @@ export default function controller(props: any, emit: any) {
           }
 
           setTimeout(() => {
-            state.formData = response
+            state.formData = {...response, identificationCopy: response?.identification}
           }, 0)
         }).catch(() => {
           alert.error({message: i18n.tr('isite.cms.message.errorRequest')});
@@ -290,6 +316,10 @@ export default function controller(props: any, emit: any) {
     },
     setItem() {
       if (props.item) state.formData = props.item
+    },
+    callMethods() {
+      if(!state.n8nData) methods.sendImage()
+      else methods.createItem()
     }
   }
 
@@ -302,11 +332,13 @@ export default function controller(props: any, emit: any) {
   })
 
   watch(() => state.loadOptionsCrud, (newValue) => {
+    if (!!props.item?.id) return
+
     const identification = state.formData?.identification
 
     const provider = newValue.find(p => p.identification == identification)
 
-    if(provider) state.n8nData = {... state.n8nData || {}, providerId: provider.id}
+    if (provider) state.n8nData = {...state.n8nData || {}, providerId: provider.id}
   })
 
   watch(() => state.show, (newValue) => {

@@ -20,10 +20,11 @@ export default {
           columns: [
             {name: 'id', label: this.$tr('isite.cms.form.id'), field: 'id', align: 'left'},
             {
-              name: 'provider_name',
+              name: 'provider_id',
               label: this.$tr('iaccounting.cms.form.providerName'),
-              field: 'providerName',
-              align: 'center',
+              field: 'provider',
+              format: val => val?.name || '-',
+              align: 'left',
               action: 'edit'
             },
             {
@@ -47,6 +48,9 @@ export default {
             },
             {name: 'actions', label: this.$tr('isite.cms.form.actions'), align: 'left'},
           ],
+          requestParams: {
+            include: 'provider'
+          }
         },
         update: {},
         delete: true,
