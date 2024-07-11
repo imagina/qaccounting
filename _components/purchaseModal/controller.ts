@@ -2,6 +2,7 @@ import {computed, reactive, onMounted, toRefs, watch, ref} from "vue";
 import service from './services'
 //@ts-ignore
 import {i18n, clone, alert} from 'src/plugins/utils'
+import {getFieldsProvider} from "../../model";
 
 export default function controller(props: any, emit: any) {
   // Refs
@@ -108,42 +109,19 @@ export default function controller(props: any, emit: any) {
             //@ts-ignore
             crudData: import('src/modules/qaccounting/_crud/providers.vue'),
             customData: {
-              formLeft: {
-                name: {
-                  value: n8nData?.provider?.name,
-                  type: 'input',
-                  props: {
-                    label: `${i18n.tr('isite.cms.form.name')}*`,
-                    rules: [
-                      val => !!val || i18n.tr('isite.cms.message.fieldRequired')
-                    ],
-                  },
-                },
-                typeId: {
-                  value: n8nData?.provider?.typeOfDocument || 'NIT',
-                  type: 'select',
-                  props: {
-                    label: i18n.tr('iaccounting.cms.form.idType'),
-                    options: [
-                      {label: 'Cedula de Ciudadania', value: 'CC'},
-                      {label: 'Número de Identificación Tributaria (NIT)', value: 'NIT'}
-                    ],
-                    rules: [
-                      val => !!val || i18n.tr('isite.cms.message.fieldRequired')
-                    ],
-                  }
-                },
-                identification: {
-                  value: n8nData?.provider?.identification,
-                  type: 'input',
-                  props: {
-                    label: i18n.tr('iaccounting.cms.form.idNumber'),
-                    rules: [
-                      val => !!val || i18n.tr('isite.cms.message.fieldRequired')
-                    ],
-                  }
-                },
-              }
+              formLeft: getFieldsProvider(i18n.tr, {
+                name: {value: n8nData?.provider?.name || ''},
+                lastname: {value: n8nData?.provider?.lastname || ''},
+
+                personKind: {value: n8nData?.provider?.personKind || 'company'},
+                typeId: {value: n8nData?.provider?.typeId || 'NIT'},
+
+                identification: {value: n8nData?.provider?.identification || ''},
+                checkDigit: {value: n8nData?.provider?.checkDigit || ''},
+
+                phoneNumber: {value: n8nData?.provider?.phoneNumber || ''},
+                address: {value: n8nData?.provider?.address || ''},
+              })
             },
             crudProps: {
               label: `${i18n.tr('isite.cms.label.provider')}*`,
@@ -192,7 +170,7 @@ export default function controller(props: any, emit: any) {
           },
 
 
-          elaborationDate: {
+          invoiceDate: {
             value: null,
             type: 'date',
             props: {
@@ -318,7 +296,7 @@ export default function controller(props: any, emit: any) {
       if (props.item) state.formData = props.item
     },
     callMethods() {
-      if(!state.n8nData) methods.sendImage()
+      if (!state.n8nData) methods.sendImage()
       else methods.createItem()
     }
   }

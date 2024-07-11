@@ -1,7 +1,7 @@
 <template>
 </template>
 <script>
-import {i18n} from "../../../plugins/utils";
+import {getFieldsProvider} from "../model";
 
 export default {
   data() {
@@ -46,50 +46,7 @@ export default {
           title: this.$tr('iaccounting.cms.title.updateProvider'),
         },
         delete: true,
-        formLeft: {
-          id: {value: ''},
-          name: {
-            value: '',
-            type: 'input',
-            props: {
-              label: `${this.$tr('isite.cms.form.name')}*`,
-              rules: [
-                val => !!val || this.$tr('isite.cms.message.fieldRequired')
-              ],
-            },
-          },
-          typeId: {
-            value: 'NIT',
-            type: 'select',
-            props: {
-              label: i18n.tr('iaccounting.cms.form.idType') + '*',
-              options: [
-                {label: 'Cedula de Ciudadania', value: 'CC'},
-                {label: 'Número de Identificación Tributaria (NIT)', value: 'NIT'}
-              ],
-              rules: [
-                val => !!val || i18n.tr('isite.cms.message.fieldRequired')
-              ],
-            }
-          },
-          identification: {
-            value: '',
-            type: 'input',
-            props: {
-              label: this.$tr('iaccounting.cms.form.idNumber') + '*',
-              rules: [
-                val => !!val || this.$tr('isite.cms.message.fieldRequired')
-              ],
-            }
-          },
-          externalId: {
-            value: '',
-            type: 'input',
-            props: {
-              label: this.$tr('isite.cms.form.externalId'),
-            }
-          },
-        },
+        formLeft: getFieldsProvider(this.$tr)
       }
     }
   },
