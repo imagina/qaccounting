@@ -77,7 +77,7 @@ export default function controller(props: any, emit: any) {
         banner: {
           type: 'banner',
           colClass: 'col-12',
-          vIf: (!!n8nData && !n8nData?.providerId) && !existItem,
+          vIf: (!!n8nData && !state.formData?.identification) && !existItem,
           props: {
             color: 'info',
             icon: 'fas fa-exclamation-triangle',
@@ -293,8 +293,11 @@ export default function controller(props: any, emit: any) {
     //Update block
     createItem: () => {
       if (state.formData) {
+        const provider = state.loadOptionsCrud.find(p => p.identification == state.formData.identification)
+
         const dataToCreate = {
           ...state.n8nData,
+          providerId: provider?.id,
           ...state.formData
         }
 
@@ -333,16 +336,6 @@ export default function controller(props: any, emit: any) {
 
   watch(() => props.modelValue, (newValue) => {
     state.show = clone(newValue);
-  })
-
-  watch(() => state.loadOptionsCrud, (newValue) => {
-    if (!!props.item?.id) return
-
-    const identification = state.formData?.identification
-
-    const provider = newValue.find(p => p.identification == identification)
-
-    if (provider) state.n8nData = {...state.n8nData || {}, providerId: provider.id}
   })
 
   watch(() => state.show, (newValue) => {
