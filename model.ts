@@ -1,6 +1,13 @@
+import {i18n} from "../../plugins/utils";
+
 export function getFieldsProvider(lang: any, valuesToMerge = null) {
   const fields = {
     id: {value: ''},
+    banner: {
+      type: 'banner',
+      vIf: false
+    },
+
     name: {
       value: '',
       type: 'input',
@@ -25,10 +32,10 @@ export function getFieldsProvider(lang: any, valuesToMerge = null) {
       required: true,
       colClass: 'col-12 col-md-6',
       props: {
-        label: lang('iaccounting.cms.form.kindPerson(PT)') + '*',
+        label: lang('iaccounting.cms.form.kindPerson') + '*',
         options: [
-          {label: 'Persona(PT)', value: 'person'},
-          {label: 'Empresa', value: 'company'}
+          {label: lang('iaccounting.cms.label.person'), value: 'person'},
+          {label: lang('iaccounting.cms.label.company'), value: 'company'}
         ]
       }
     },
@@ -40,10 +47,10 @@ export function getFieldsProvider(lang: any, valuesToMerge = null) {
       props: {
         label: lang('iaccounting.cms.form.idType') + '*',
         options: [
-          {label: 'Cedula de Ciudadania(PT)', value: 'CC'},
-          {label: 'Número de Identificación Tributaria', value: 'NIT'},
-          {label: 'Cedula Extranjera', value: 'CE'},
-          {label: 'Documento Extranjero', value: 'DE'}
+          {label: lang('iaccounting.cms.label.CC'), value: 'CC'},
+          {label: lang('iaccounting.cms.label.NIT'), value: 'NIT'},
+          {label: lang('iaccounting.cms.label.CE'), value: 'CE'},
+          {label: lang('iaccounting.cms.label.DE'), value: 'DE'}
         ]
       }
     },
@@ -62,7 +69,7 @@ export function getFieldsProvider(lang: any, valuesToMerge = null) {
       type: 'input',
       colClass: 'col-2 col-md-1',
       props: {
-        label: lang('iaccounting.cms.form.checkDigit(PT)')
+        label: lang('iaccounting.cms.form.checkDigit')
       }
     },
     cityId: {
@@ -81,11 +88,10 @@ export function getFieldsProvider(lang: any, valuesToMerge = null) {
     },
 
     phoneNumber: {
-      type: 'localizedPhone',
+      type: 'input',
       colClass: "col-12 col-md-6",
       props: {
-        label: lang('isite.cms.label.phoneNumber'),
-        mask: "##########"
+        label: lang('isite.cms.label.phoneNumber')
       },
     },
     externalId: {

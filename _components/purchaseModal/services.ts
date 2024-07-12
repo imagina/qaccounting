@@ -1,6 +1,5 @@
 import baseService from 'src/modules/qcrud/_services/baseService'
 import {store} from 'src/plugins/utils'
-import appConfig from 'src/setup/app'
 
 export default {
   sendN8NImg(data: any) {
@@ -11,7 +10,7 @@ export default {
         ...data,
         attributes: {
           ...data.attributes,
-          baseUrl: appConfig.baseUrl
+          baseUrl: store.state.qsiteApp.baseUrl
         }
       }
       //Request

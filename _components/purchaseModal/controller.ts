@@ -91,12 +91,14 @@ export default function controller(props: any, emit: any) {
       if (!!n8nData || existItem) {
         let fieldName = existItem ? 'providerId' : 'identification'
         fields = {
-          identificationCopy: {
-            type: 'copy',
-            vIf: !existItem,
+          banner: {
+            type: 'banner',
+            colClass: 'col-12',
+            vIf: !n8nData.providerId && !existItem,
             props: {
-              readonly: true,
-              label: i18n.tr('iaccounting.cms.form.idNumberN8N')
+              color: 'info',
+              icon: 'fas fa-exclamation-triangle',
+              message: i18n.tr('iaccounting.cms.messages.providerDesc'),
             }
           }
         }
@@ -104,12 +106,22 @@ export default function controller(props: any, emit: any) {
         fields[fieldName] = {
           type: 'crud',
           permission: 'iaccounting.providers.manage',
+          colClass: 'col-12',
           props: {
             crudType: 'select',
             //@ts-ignore
             crudData: import('src/modules/qaccounting/_crud/providers.vue'),
             customData: {
               formLeft: getFieldsProvider(i18n.tr, {
+                banner: {
+                  type: 'banner',
+                  colClass: 'col-12',
+                  props: {
+                    color: 'info',
+                    icon: 'fas fa-exclamation-triangle',
+                    message: i18n.tr('iaccounting.cms.messages.providerCreateDesc'),
+                  }
+                },
                 name: {value: n8nData?.provider?.name || ''},
                 lastname: {value: n8nData?.provider?.lastname || ''},
 
@@ -160,12 +172,17 @@ export default function controller(props: any, emit: any) {
             }
           },
           paymentMethod: {
-            value: '',
-            type: 'input',
+            value: 'credit',
+            type: 'select',
             required: true,
             props: {
-              readonly: existItem,
-              label: i18n.tr('isite.cms.label.paymentMethod') + '*'
+              label: `${i18n.tr('isite.cms.label.paymentMethod')}*`,
+              options: [
+                {label: i18n.tr('iaccounting.cms.label.credit'), value: 'credit'},
+                {label: i18n.tr('iaccounting.cms.label.bankAccount'), value: 'bankAccount'},
+                {label: i18n.tr('iaccounting.cms.label.cash'), value: 'cash'}
+              ],
+              readonly: existItem
             }
           },
 
