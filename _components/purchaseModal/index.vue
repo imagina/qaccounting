@@ -1,6 +1,7 @@
 <template>
   <master-modal v-model="show" custom-position v-bind="modalProps" @hide="closeModal" @show="setItem">
-    <dynamic-form v-model="formData" :blocks="fields" hide-progress-bar no-actions ref="refForm" @submit="callMethods"/>
+    <dynamic-form v-model="formData" :blocks="fields" hide-progress-bar no-actions ref="refForm" @submit="callMethods"
+                  no-reset-with-blocks-update/>
   </master-modal>
 </template>
 <script lang="ts">

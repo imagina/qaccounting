@@ -36,9 +36,9 @@ export default {
             {name: 'subtotal', label: this.$tr('iaccounting.cms.form.subtotal'), field: 'subtotal', align: 'left'},
             {name: 'total', label: this.$tr('iaccounting.cms.form.total'), field: 'total', align: 'rigth'},
             {
-              name: 'elaboration_date',
+              name: 'invoice_date',
               label: this.$tr('iaccounting.cms.form.elaborationDate'),
-              field: 'elaborationDate',
+              field: 'invoiceDate',
               align: 'left',
               format: val => val ? this.$trd(val) : '-',
             },
@@ -49,7 +49,7 @@ export default {
             {name: 'actions', label: this.$tr('isite.cms.form.actions'), align: 'left'},
           ],
           requestParams: {
-            include: 'provider'
+            include: 'provider,files'
           }
         },
         update: {},
