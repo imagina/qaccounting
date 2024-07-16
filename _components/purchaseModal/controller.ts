@@ -16,7 +16,9 @@ export default function controller(props: any, emit: any) {
     formData: null,
     loading: false,
     n8nData: null,
-    loadOptionsCrud: []
+    loadOptionsCrud: [],
+    file: null,
+    extensionDocs: ['doc', 'docx', 'xls', 'xlsx', 'ppt', 'pps']
   })
 
   // Computed
@@ -55,6 +57,7 @@ export default function controller(props: any, emit: any) {
       return {
         title,
         width: 'max-content',
+        modalWidthSize: !!state.file && existn8nData ? '90vw' : '65vw',
         persistent: true,
         loading: state.loading,
         actions
@@ -254,6 +257,14 @@ export default function controller(props: any, emit: any) {
             entity: "Modules\\Iaccounting\\Entities\\Purchase",
             entityId: null,
             readonly: existItem
+          },
+          getFiles: (item: any) => {
+            const file = item[0] || null
+            if(!file) return
+
+            if(state.extensionDocs.includes(file.extension)) file.url = `https://view.officeapps.live.com/op/view.aspx?src=${file.url}`
+
+            state.file = file
           }
         }
       }
@@ -265,24 +276,14 @@ export default function controller(props: any, emit: any) {
   // Methods
   const methods = {
     sendImage: async () => {
-      const data: any = state.formData
-      if (data?.mediasSingle?.mainimage) {
+      const file: any = state.file
+      if (file?.url) {
         state.loading = true
 
-        const attributes = {
-          imageId: data?.mediasSingle?.mainimage
-        }
-
         //Create purchase support
-        await service.sendN8NImg({attributes}).then((response: any) => {
-          state.n8nData = {
-            ...data,
-            ...response
-          }
-
-          setTimeout(() => {
-            state.formData = response
-          }, 0)
+        await service.sendN8NImg({attributes: file}).then((response: any) => {
+          state.n8nData = response
+          state.formData = response
         }).catch(() => {
           alert.error({message: i18n.tr('isite.cms.message.errorRequest')});
         })
