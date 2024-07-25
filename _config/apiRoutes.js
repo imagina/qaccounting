@@ -7,6 +7,7 @@ export default {
   urlBase : urlBase,
   version: moduleVersion,
   purchases: `${urlBase}/purchases`,
-  accountingAccounts: `${urlBase}/accountingaccounts`,
+  apikeys: `${urlBase}/apikeys`,
+  mappings: `${urlBase}/mappings`,
   providers: `${urlBase}/providers`
 }

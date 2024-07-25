@@ -8,7 +8,8 @@ export default [
     children: [
       pages.qaccounting.purchases,
       pages.qaccounting.providers,
-      pages.qaccounting.accountingaccounts
+      pages.qaccounting.apikeys,
+      pages.qaccounting.mappings
     ]
   }
 ]

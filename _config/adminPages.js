@@ -28,17 +28,32 @@ export default {
       refresh: true,
     }
   },
-  accountingaccounts: {
-    permission: 'iaccounting.accountingaccounts.manage',
+  apikeys: {
+    permission: 'iaccounting.apikeys.manage',
     activated: true,
     authenticated: true,
-    path: '/accounting/accountingaccounts/index',
-    name: 'qaccounting.admin.accountingaccounts',
-    crud : import('src/modules/qaccounting/_crud/accountingAccounts.vue'),
+    path: '/accounting/apikeys/index',
+    name: 'qaccounting.admin.apikeys',
+    crud: import('src/modules/qaccounting/_crud/apiKeys.vue'),
     page: () => import('modules/qcrud/_pages/admin/crudPage'),
     layout: () => import('layouts/master.vue'),
-    title: 'iaccounting.cms.sidebar.adminAccountingaccounts',
-    icon: 'fa-light fa-abacus',
+    title: 'iaccounting.cms.sidebar.adminApiKeys',
+    icon: 'fa-light fa-key',
+    subHeader: {
+      refresh: true,
+    }
+  },
+  mappings: {
+    permission: 'iaccounting.mappings.manage',
+    activated: true,
+    authenticated: true,
+    path: '/accounting/mapping/index',
+    name: 'qaccounting.admin.mappings',
+    crud: import('src/modules/qaccounting/_crud/mapping.vue'),
+    page: () => import('modules/qcrud/_pages/admin/crudPage'),
+    layout: () => import('layouts/master.vue'),
+    title: 'iaccounting.cms.sidebar.adminMappings',
+    icon: 'fa-light fa-diagram-project',
     subHeader: {
       refresh: true,
     }
