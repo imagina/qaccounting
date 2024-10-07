@@ -1,5 +1,3 @@
-import {i18n} from "../../plugins/utils";
-
 export function getFieldsProvider(lang: any, valuesToMerge = null) {
   const fields = {
     id: {value: ''},
@@ -27,31 +25,27 @@ export function getFieldsProvider(lang: any, valuesToMerge = null) {
     },
 
     personKind: {
-      value: 'company',
+      value: 1,
       type: 'select',
       required: true,
       colClass: 'col-12 col-md-6',
       props: {
-        label: lang('iaccounting.cms.form.kindPerson') + '*',
-        options: [
-          {label: lang('iaccounting.cms.label.person'), value: 'person'},
-          {label: lang('iaccounting.cms.label.company'), value: 'company'}
-        ]
+        label: lang('iaccounting.cms.form.kindPerson') + '*'
+      },
+      loadOptions: {
+        apiRoute: 'apiRoutes.qaccounting.kindPeople',
       }
     },
     typeId: {
-      value: 'NIT',
+      value: 0,
       type: 'select',
       required: true,
       colClass: 'col-12 col-md-6',
       props: {
-        label: lang('iaccounting.cms.form.idType') + '*',
-        options: [
-          {label: lang('iaccounting.cms.label.CC'), value: 'CC'},
-          {label: lang('iaccounting.cms.label.NIT'), value: 'NIT'},
-          {label: lang('iaccounting.cms.label.CE'), value: 'CE'},
-          {label: lang('iaccounting.cms.label.DE'), value: 'DE'}
-        ]
+        label: lang('iaccounting.cms.form.idType') + '*'
+      },
+      loadOptions: {
+        apiRoute: 'apiRoutes.qaccounting.documentTypePeople',
       }
     },
 

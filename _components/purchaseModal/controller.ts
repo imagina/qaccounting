@@ -146,34 +146,29 @@ export default function controller(props: any, emit: any) {
         ...fields,
 
         documentType: {
-          value: 'electronicInvoice',
+          value: 0,
           type: 'select',
+          required: true,
           vIf: validations,
           props: {
             label: `${i18n.tr('iaccounting.cms.form.documentType')}*`,
-            options: [
-              {label: i18n.tr('iaccounting.cms.label.documentSupport'), value: 'supportDocument'},
-              {label: i18n.tr('iaccounting.cms.label.electronicInvoice'), value: 'electronicInvoice'}
-            ],
-            readonly: existItem,
-            rules: [
-              (val: any) => !!val || i18n.tr('isite.cms.message.fieldRequired')
-            ]
+            readonly: existItem
+          },
+          loadOptions: {
+            apiRoute: 'apiRoutes.qaccounting.documentTypes',
           }
         },
-        paymentMethod: {
-          value: 'credit',
+        paymentMethodId: {
+          value: 0,
           type: 'select',
           required: true,
           vIf: validations,
           props: {
             label: `${i18n.tr('isite.cms.label.paymentMethod')}*`,
-            options: [
-              {label: i18n.tr('iaccounting.cms.label.credit'), value: 'credit'},
-              {label: i18n.tr('iaccounting.cms.label.bankAccount'), value: 'bankAccount'},
-              {label: i18n.tr('iaccounting.cms.label.cash'), value: 'cash'}
-            ],
             readonly: existItem
+          },
+          loadOptions: {
+            apiRoute: 'apiRoutes.qaccounting.paymentMethods',
           }
         },
 

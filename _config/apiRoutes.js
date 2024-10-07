@@ -9,5 +9,9 @@ export default {
   purchases: `${urlBase}/purchases`,
   apikeys: `${urlBase}/apikeys`,
   mappings: `${urlBase}/mappings`,
-  providers: `${urlBase}/providers`
+  providers: `${urlBase}/providers`,
+  paymentMethods: `${urlBase}/paymentMethods`,
+  documentTypes: `${urlBase}/documentTypes`,
+  documentTypePeople: `${urlBase}/documentTypePeople`,
+  kindPeople: `${urlBase}/kindPeople`,
 }

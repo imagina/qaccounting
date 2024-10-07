@@ -36,6 +36,12 @@ export default defineComponent({
 </script>
 <style lang="scss">
 #purchaseModal {
+  #dynamicFormComponentContent {
+    box-shadow: none;
+    padding-bottom: 0;
+    margin-bottom: 0;
+  }
+
   @media screen and (max-width: $breakpoint-md-min) {
     #showFile {
       display: none;
