@@ -106,6 +106,7 @@ export default function controller(props: any, emit: any) {
                 type: 'banner',
                 colClass: 'col-12',
                 props: {
+                  vIf: true,
                   color: 'info',
                   icon: 'fas fa-exclamation-triangle',
                   message: i18n.tr('iaccounting.cms.messages.providerCreateDesc'),

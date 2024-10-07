@@ -6,6 +6,7 @@
       ref="crudComponent"
       :crud-data="import('src/modules/qaccounting/_crud/purchases.vue')"
       :custom-data="customCrudData"
+      :title="$route.meta.title"
     />
   </div>
 

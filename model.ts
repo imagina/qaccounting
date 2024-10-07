@@ -3,7 +3,9 @@ export function getFieldsProvider(lang: any, valuesToMerge = null) {
     id: {value: ''},
     banner: {
       type: 'banner',
-      vIf: false
+      props: {
+        vIf: false
+      }
     },
 
     name: {
