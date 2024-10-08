@@ -30,7 +30,8 @@ export default {
             {
               name: 'payment_method',
               label: this.$tr('isite.cms.label.paymentMethod'),
-              field: 'paymentMethod',
+              field: 'paymentName',
+              format: val => val?.title ?? '-',
               align: 'left'
             },
             {name: 'subtotal', label: this.$tr('iaccounting.cms.form.subtotal'), field: 'subtotal', align: 'left'},

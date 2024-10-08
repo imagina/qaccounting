@@ -115,15 +115,24 @@ export default function controller(props: any, emit: any) {
               name: {value: n8nData?.provider?.name || ''},
               lastname: {value: n8nData?.provider?.lastname || ''},
 
-              personKind: {value: n8nData?.provider?.personKind || 'company'},
-              typeId: {value: n8nData?.provider?.typeId || 'NIT'},
+              personKind: {value: n8nData?.provider?.personKind || 0},
+              typeId: {value: n8nData?.provider?.typeId || 0},
 
-              identification: {value: n8nData?.provider?.identification || ''},
-              checkDigit: {value: n8nData?.provider?.checkDigit || ''},
+              identification: {value: n8nData?.provider?.identification || '', colClass: 'col-10 col-md-4'},
+              checkDigit: {value: n8nData?.provider?.checkDigit || '', colClass: 'col-2 col-md-2',},
 
               phoneNumber: {value: n8nData?.provider?.phoneNumber || ''},
               address: {value: n8nData?.provider?.address || ''},
-            })
+            }),
+            formRight: {
+              viewFile: {
+                type: 'viewImage',
+                props: {
+                  height: "calc(100vh - 200px)",
+                  src: state.file?.url
+                }
+              }
+            },
           },
           crudProps: {
             label: `${i18n.tr('isite.cms.label.provider')}*`,

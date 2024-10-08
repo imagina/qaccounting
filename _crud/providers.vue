@@ -24,7 +24,10 @@ export default {
           columns: [
             {name: 'id', label: this.$tr('isite.cms.form.id'), field: 'id', align: 'left'},
             {name: 'name', label: this.$tr('isite.cms.form.name'), field: 'name', align: 'rigth'},
-            {name: 'type_id', label: this.$tr('iaccounting.cms.form.idType'), field: 'typeId', align: 'rigth'},
+            {
+              name: 'type_id', label: this.$tr('iaccounting.cms.form.idType'), field: 'typeName', align: 'rigth',
+              format: val => val?.title ?? '-'
+            },
             {
               name: 'identification',
               label: this.$tr('iaccounting.cms.form.idNumber'),
