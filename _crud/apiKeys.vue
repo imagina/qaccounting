@@ -1,8 +1,6 @@
 <template>
 </template>
 <script>
-import {i18n} from "../../../plugins/utils";
-
 export default {
   data() {
     return {
@@ -37,7 +35,7 @@ export default {
           ]
         },
         update: {
-          title: this.$tr('iaccounting.cms.title.updateApikeys'),
+          title: this.$tr('iaccounting.cms.title.updateApiKey'),
         },
         delete: true,
         formLeft: {
@@ -64,7 +62,7 @@ export default {
             colClass: 'col-12',
             required: true,
             props: {
-              label: this.$tr('isite.cms.label.params')
+              label: this.$tr('iaccounting.cms.form.params')
             }
           }
         },

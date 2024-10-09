@@ -21,18 +21,18 @@ export default {
         read: {
           columns: [
             {name: 'id', label: this.$tr('isite.cms.form.id'), field: 'id', align: 'left'},
-            {name: 'type', label: this.$tr('isite.cms.form.type  (PT)'), field: 'type', align: 'rigth'},
+            {name: 'type', label: this.$tr('isite.cms.form.type'), field: 'type', align: 'rigth'},
             {
               name: 'apikey_id',
-              label: this.$tr('isite.cms.form.apikeyId  (PT)'),
+              label: this.$tr('iaccounting.cms.form.apiKey'),
               field: 'apikey',
               align: 'rigth',
               format: (val) => val?.name ?? '-'
             },
-            {name: 'external_id', label: this.$tr('isite.cms.form.externalId  (PT)'), field: 'externalId', align: 'left'},
+            {name: 'external_id', label: this.$tr('isite.cms.form.externalId'), field: 'externalId', align: 'left'},
             {
               name: 'external_name',
-              label: this.$tr('isite.cms.form.externalName  (PT)'),
+              label: this.$tr('iaccounting.cms.label.externalName'),
               field: 'externalName',
               align: 'left'
             },
@@ -59,10 +59,10 @@ export default {
             type: 'select',
             required: true,
             props: {
-              label: `${this.$tr('iaccounting.cms.form.type (PT)')}*`,
+              label: `${this.$tr('isite.cms.form.type')}*`,
               options: [
-                {label: this.$tr('iaccounting.cms.label.accountingAccount (PT)'), value: 'iaccounting.cms.label.accountingAccount'},
-                {label: this.$tr('iaccounting.cms.label.paymentMethod (PT)'), value: 'iaccounting.cms.label.paymentMethod'}
+                {label: this.$tr('iaccounting.cms.sidebar.adminAccountingaccounts'), value: 'iaccounting.cms.sidebar.adminAccountingaccounts'},
+                {label: this.$tr('isite.cms.label.paymentMethod'), value: 'isite.cms.label.paymentMethod'}
               ]
             }
           },
@@ -71,7 +71,7 @@ export default {
             type: 'select',
             required: true,
             props: {
-              label: `${this.$tr('iaccounting.cms.form.apikey (PT)')}*`
+              label: `${this.$tr('iaccounting.cms.form.apiKey')}*`
             },
             loadOptions: {
               apiRoute: 'apiRoutes.qaccounting.apikeys',
@@ -91,7 +91,7 @@ export default {
             type: 'input',
             required: true,
             props: {
-              label: `${this.$tr('isite.cms.form.externalName (PT)')}*`
+              label: `${this.$tr('iaccounting.cms.label.externalName')}*`
             },
           }
         },
