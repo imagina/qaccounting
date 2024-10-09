@@ -12,11 +12,11 @@ export default {
     crudData() {
       return {
         crudId: this.crudId,
-        entityName: config("main.qaccounting.entityNames.apikey"),
-        apiRoute: 'apiRoutes.qaccounting.apikeys',
-        permission: 'iaccounting.apikeys',
+        entityName: config("main.qaccounting.entityNames.origin"),
+        apiRoute: 'apiRoutes.qaccounting.origins',
+        permission: 'iaccounting.origins',
         create: {
-          title: this.$tr('iaccounting.cms.title.newApikey'),
+          title: this.$tr('iaccounting.cms.title.newOrigin'),
         },
         read: {
           columns: [
@@ -35,7 +35,7 @@ export default {
           ]
         },
         update: {
-          title: this.$tr('iaccounting.cms.title.updateApiKey'),
+          title: this.$tr('iaccounting.cms.title.updateOrigin'),
         },
         delete: true,
         formLeft: {

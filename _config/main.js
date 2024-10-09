@@ -3,8 +3,7 @@ export default {
   //Entities
   entityNames: {
     purchase: 'purchase',
-    apikey: 'apikey',
-    mapping: 'mapping',
+    origin: 'origin',
     provider: 'provider'
   },
 }

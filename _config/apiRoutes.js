@@ -7,7 +7,7 @@ export default {
   urlBase : urlBase,
   version: moduleVersion,
   purchases: `${urlBase}/purchases`,
-  apikeys: `${urlBase}/apikeys`,
+  origins: `${urlBase}/origins`,
   mappings: `${urlBase}/mappings`,
   providers: `${urlBase}/providers`,
   paymentMethods: `${urlBase}/paymentMethods`,
