@@ -126,10 +126,13 @@ export default function controller(props: any, emit: any) {
             }),
             formRight: {
               viewFile: {
-                type: 'viewImage',
+                type: 'previewFile',
                 props: {
-                  height: "calc(100vh - 200px)",
-                  src: state.file?.url
+                  imgProps: {
+                    height: "calc(100vh - 200px)",
+                  },
+                  url: state.file?.url,
+                  extension: state.file?.extension
                 }
               }
             },
