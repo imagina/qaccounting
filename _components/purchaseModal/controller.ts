@@ -2,7 +2,6 @@ import {computed, reactive, onMounted, toRefs, watch, ref} from "vue";
 import service from './services'
 //@ts-ignore
 import {i18n, clone, alert} from 'src/plugins/utils'
-import {getFieldsProvider} from "../../model";
 
 export default function controller(props: any, emit: any) {
   // Refs
@@ -101,7 +100,19 @@ export default function controller(props: any, emit: any) {
           //@ts-ignore
           crudData: import('src/modules/qaccounting/_crud/providers.vue'),
           customData: {
-            formLeft: getFieldsProvider(i18n.tr, {
+            create: {
+              dataCustom: {
+                name: n8nData?.provider?.name || '',
+                lastname: n8nData?.provider?.lastname || '',
+                personKind: n8nData?.provider?.personKind || 0,
+                typeId: n8nData?.provider?.typeId || 0,
+                identification: n8nData?.provider?.identification || '',
+                checkDigit: n8nData?.provider?.checkDigit || '',
+                phoneNumber: n8nData?.provider?.phoneNumber || '',
+                address: n8nData?.provider?.address || '',
+              }
+            },
+            formLeft: {
               banner: {
                 type: 'banner',
                 colClass: 'col-12',
@@ -111,19 +122,8 @@ export default function controller(props: any, emit: any) {
                   icon: 'fas fa-exclamation-triangle',
                   message: i18n.tr('iaccounting.cms.messages.providerCreateDesc'),
                 }
-              },
-              name: {value: n8nData?.provider?.name || ''},
-              lastname: {value: n8nData?.provider?.lastname || ''},
-
-              personKind: {value: n8nData?.provider?.personKind || 0},
-              typeId: {value: n8nData?.provider?.typeId || 0},
-
-              identification: {value: n8nData?.provider?.identification || '', colClass: 'col-10 col-md-4'},
-              checkDigit: {value: n8nData?.provider?.checkDigit || '', colClass: 'col-2 col-md-2',},
-
-              phoneNumber: {value: n8nData?.provider?.phoneNumber || ''},
-              address: {value: n8nData?.provider?.address || ''},
-            }),
+              }
+            },
             formRight: {
               viewFile: {
                 type: 'previewFile',
@@ -268,9 +268,9 @@ export default function controller(props: any, emit: any) {
           },
           getFiles: (item: any) => {
             const file = item[0] || null
-            if(!file) return
+            if (!file) return
 
-            if(state.extensionDocs.includes(file.extension)) file.url = `https://view.officeapps.live.com/op/view.aspx?src=${file.url}`
+            if (state.extensionDocs.includes(file.extension)) file.url = `https://view.officeapps.live.com/op/view.aspx?src=${file.url}`
 
             state.file = file
           }
