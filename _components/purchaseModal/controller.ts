@@ -252,6 +252,66 @@ export default function controller(props: any, emit: any) {
           }
         },
 
+        items: {
+          value: [],
+          type: 'multiplier',
+          vIf: validations,
+          colClass: "col-12",
+          props: {
+            label: 'Products',
+            isDraggable: false, // Default true
+            maxQuantity: 15, // Default 5
+            fields: {
+              type: {
+                value: 'Account',
+                type: 'select',
+                colClass: "col-6",
+                props: {
+                  label: 'Tipo',
+                  options: [
+                    {label: 'Cuenta Contable', value: 'Account'},
+                    {label: 'Producto', value: 'Product'},
+                    {label: 'Activo', value: 'FixedAsset'}
+                  ]
+                },
+              },
+              code: {
+                value: null,
+                type: 'input',
+                colClass: "col-6",
+                props: {
+                  label: 'Codigo'
+                }
+              },
+              quantity: {
+                value: 0,
+                type: 'input',
+                colClass: "col-3",
+                props: {
+                  type: 'number',
+                  label: 'Cantidad'
+                }
+              },
+              description: {
+                value: null,
+                type: 'input',
+                colClass: "col-6",
+                props: {
+                  label: 'Descripcion'
+                }
+              },
+              price: {
+                value: 0,
+                type: 'input',
+                colClass: "col-3",
+                props: {
+                  type: 'number',
+                  label: 'Precio'
+                }
+              },
+            }
+          }
+        },
         mediasSingle: {
           name: 'mediasSingle',
           value: {},
