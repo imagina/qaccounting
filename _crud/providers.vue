@@ -156,7 +156,6 @@ export default {
           email: {
             value: null,
             type: 'input',
-            fakeFieldName: 'options',
             colClass: 'col-12',
             props: {
               label: `${this.$tr('isite.cms.form.email')}*`,
