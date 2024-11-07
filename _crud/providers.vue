@@ -1,6 +1,7 @@
 <template>
 </template>
 <script>
+import {calculateDV} from "../helper";
 
 export default {
   data() {
@@ -52,6 +53,7 @@ export default {
         delete: true,
         formLeft: {
           id: {value: ''},
+          cityCode: {value: '', fakeFieldName: 'options'},
           banner: {
             type: 'banner',
             props: {
@@ -151,6 +153,20 @@ export default {
             }
           },
 
+          email: {
+            value: null,
+            type: 'input',
+            fakeFieldName: 'options',
+            colClass: 'col-12',
+            props: {
+              label: `${this.$tr('isite.cms.form.email')}*`,
+              rules: [
+                val => !!val || this.$tr('isite.cms.message.fieldRequired'),
+                val => this.$helper.validateEmail(val) || this.$tr('isite.cms.message.fieldEmail')
+              ]
+            }
+          },
+
           address: {
             value: '',
             type: 'input',
@@ -164,7 +180,7 @@ export default {
           return new Promise(resolve => {
             if (changedFields.length === 1) {
               if (changedFields.includes('identification')) {
-                formData.checkDigit = this.calculateDV(formData.identification);
+                formData.checkDigit = calculateDV(formData.identification);
               } else if (changedFields.includes('personKind')) formData.typeId = isPerson ? 0 : 1
             }
             resolve(formData)
@@ -177,19 +193,6 @@ export default {
       return this.$store.state.qcrudComponent.component[this.crudId] || {}
     }
   },
-  methods: {
-    calculateDV(nit) {
-      const weights = [3, 7, 13, 17, 19, 23, 29, 37, 41, 43, 47];
-      let nitStr = String(nit).split('').reverse(); // Reverse the NIT to apply the weights from right to left
-      let sum = nitStr.reduce((acc, digit, i) => acc + parseInt(digit) * weights[i], 0);
-
-      let remainder = sum % 11;
-      if (remainder === 0 || remainder === 1) {
-        return 0;
-      } else {
-        return 11 - remainder;
-      }
-    }
-  }
+  methods: {}
 }
 </script>

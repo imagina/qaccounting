@@ -14,4 +14,5 @@ export default {
   documentTypes: `${urlBase}/documentTypes`,
   documentTypePeople: `${urlBase}/documentTypePeople`,
   kindPeople: `${urlBase}/kindPeople`,
+  analyzeImg: `${urlBase}/purchases/analyze-img`,
 }

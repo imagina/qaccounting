@@ -1,5 +1,6 @@
 import {computed, reactive, onMounted, toRefs, watch, ref} from "vue";
 import service from './services'
+import {calculateDV} from '../../helper'
 //@ts-ignore
 import {i18n, clone, alert} from 'src/plugins/utils'
 
@@ -107,9 +108,12 @@ export default function controller(props: any, emit: any) {
                 personKind: n8nData?.provider?.personKind || 0,
                 typeId: n8nData?.provider?.typeId || 0,
                 identification: n8nData?.provider?.identification || '',
-                checkDigit: n8nData?.provider?.checkDigit || '',
+                checkDigit: calculateDV(n8nData?.provider?.identification || ''),
                 phoneNumber: n8nData?.provider?.phoneNumber || '',
                 address: n8nData?.provider?.address || '',
+                email: n8nData?.provider?.email || '',
+                cityId: n8nData?.provider?.cityId || null,
+                cityCode: n8nData?.provider?.cityCode || ''
               }
             },
             formLeft: {
