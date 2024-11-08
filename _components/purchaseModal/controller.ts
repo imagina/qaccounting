@@ -271,11 +271,9 @@ export default function controller(props: any, emit: any) {
                 type: 'select',
                 colClass: "col-6",
                 props: {
-                  label: 'Tipo',
+                  label: i18n.tr('isite.cms.form.type'),
                   options: [
-                    {label: 'Cuenta Contable', value: 'Account'},
-                    {label: 'Producto', value: 'Product'},
-                    {label: 'Activo', value: 'FixedAsset'}
+                    {label: i18n.tr('iaccounting.cms.label.account'), value: 'Account'}
                   ]
                 },
               },
@@ -283,8 +281,9 @@ export default function controller(props: any, emit: any) {
                 value: null,
                 type: 'input',
                 colClass: "col-6",
+                required: true,
                 props: {
-                  label: 'Codigo'
+                  label: i18n.tr('isite.cms.label.code')
                 }
               },
               quantity: {
@@ -293,7 +292,7 @@ export default function controller(props: any, emit: any) {
                 colClass: "col-3",
                 props: {
                   type: 'number',
-                  label: 'Cantidad'
+                  label: i18n.tr('isite.cms.label.quantity')
                 }
               },
               description: {
@@ -301,7 +300,7 @@ export default function controller(props: any, emit: any) {
                 type: 'input',
                 colClass: "col-6",
                 props: {
-                  label: 'Descripcion'
+                  label: i18n.tr('isite.cms.label.description')
                 }
               },
               price: {
@@ -310,7 +309,7 @@ export default function controller(props: any, emit: any) {
                 colClass: "col-3",
                 props: {
                   type: 'number',
-                  label: 'Precio'
+                  label: i18n.tr('isite.cms.label.price')
                 }
               },
             }
