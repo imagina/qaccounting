@@ -28,6 +28,13 @@ export default {
               action: 'edit'
             },
             {
+              name: 'statusName',
+              label: this.$tr('isite.cms.form.status'),
+              field: 'statusName',
+              format: item => this.getTag(item),
+              align: 'left'
+            },
+            {
               name: 'payment_method',
               label: this.$tr('isite.cms.label.paymentMethod'),
               field: 'paymentName',
@@ -50,7 +57,8 @@ export default {
             {name: 'actions', label: this.$tr('isite.cms.form.actions'), align: 'left'},
           ],
           requestParams: {
-            include: 'provider,files'
+            include: 'provider,files',
+            filter: {createdBy: this.$store.state.quserAuth.userId}
           }
         },
         update: {},
@@ -62,6 +70,17 @@ export default {
     crudInfo() {
       return this.$store.state.qcrudComponent.component[this.crudId] || {}
     }
+  },
+  methods: {
+    getTag(item) {
+      const title = item?.title;
+      if (!title) return '-';
+      const bg = item.bg || '#E8EBEE'
+      const color = item.color || '#496D8B'
+
+      // <i className="fa-solid fa-comment-dots"></i>
+      return `<span class="tw-border tw-py-0.5 tw-px-2 tw-rounded-md tw-font-bold" style="background-color: ${bg}; color: ${color}; font-size: 10px;">${title}</span>`;
+    },
   }
 }
 </script>

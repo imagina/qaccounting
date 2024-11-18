@@ -1,5 +1,5 @@
 <template>
-  <master-modal id="purchaseModal" v-model="show" custom-position v-bind="modalProps" @hide="closeModal" @show="setItem">
+  <master-modal id="purchaseModal" v-model="show" custom-position v-bind="modalProps" @hide="closeModal">
     <div class="row">
       <dynamic-form :class="`col-12 ${!!n8nData && !!file ? 'col-md-6' : ''}`" v-model="formData" :blocks="fields" hide-progress-bar no-actions ref="refForm" @submit="callMethods"
                     no-reset-with-blocks-update/>

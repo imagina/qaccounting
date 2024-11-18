@@ -256,7 +256,7 @@ export default function controller(props: any, emit: any) {
           }
         },
 
-        items: {
+        invoiceItems: {
           value: [],
           type: 'multiplier',
           vIf: validations,
@@ -272,6 +272,7 @@ export default function controller(props: any, emit: any) {
                 colClass: "col-6",
                 props: {
                   label: i18n.tr('isite.cms.form.type'),
+                  readonly: existItem,
                   options: [
                     {label: i18n.tr('iaccounting.cms.label.account'), value: 'Account'}
                   ]
@@ -283,6 +284,7 @@ export default function controller(props: any, emit: any) {
                 colClass: "col-6",
                 required: true,
                 props: {
+                  readonly: existItem,
                   label: i18n.tr('isite.cms.label.code')
                 }
               },
@@ -292,6 +294,7 @@ export default function controller(props: any, emit: any) {
                 colClass: "col-3",
                 props: {
                   type: 'number',
+                  readonly: existItem,
                   label: i18n.tr('isite.cms.label.quantity')
                 }
               },
@@ -300,6 +303,7 @@ export default function controller(props: any, emit: any) {
                 type: 'input',
                 colClass: "col-6",
                 props: {
+                  readonly: existItem,
                   label: i18n.tr('isite.cms.label.description')
                 }
               },
@@ -309,6 +313,7 @@ export default function controller(props: any, emit: any) {
                 colClass: "col-3",
                 props: {
                   type: 'number',
+                  readonly: existItem,
                   label: i18n.tr('isite.cms.label.price')
                 }
               },
@@ -408,6 +413,9 @@ export default function controller(props: any, emit: any) {
 
   watch(() => props.modelValue, (newValue) => {
     state.show = clone(newValue);
+    if(newValue) {
+      methods.setItem()
+    }
   })
 
   watch(() => state.show, (newValue) => {
