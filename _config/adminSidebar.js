@@ -6,7 +6,9 @@ export default [
     title: 'iaccounting.cms.sidebar.adminGroup',
     icon: 'fa-light fa-file-invoice-dollar',
     children: [
-      pages.qaccounting.purchases
+      pages.qaccounting.purchases,
+      pages.qaccounting.providers,
+      pages.qaccounting.origins
     ]
   }
 ]
