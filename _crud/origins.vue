@@ -40,7 +40,7 @@ export default {
         update: {
           title: this.$tr('iaccounting.cms.title.updateOrigin'),
           requestParams: {
-            params: {notToSnakeCase: ['params']}
+            notToSnakeCase: ['params']
           }
         },
         delete: true,
