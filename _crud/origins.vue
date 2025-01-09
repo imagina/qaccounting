@@ -17,6 +17,9 @@ export default {
         permission: 'iaccounting.origins',
         create: {
           title: this.$tr('iaccounting.cms.title.newOrigin'),
+          requestParams: {
+            notToSnakeCase: ['params']
+          }
         },
         read: {
           columns: [
@@ -36,6 +39,9 @@ export default {
         },
         update: {
           title: this.$tr('iaccounting.cms.title.updateOrigin'),
+          requestParams: {
+            params: {notToSnakeCase: ['params']}
+          }
         },
         delete: true,
         formLeft: {
