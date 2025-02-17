@@ -34,13 +34,13 @@ export default {
               format: item => this.getTag(item),
               align: 'left'
             },
-            {
+            /*{
               name: 'payment_method',
               label: this.$tr('isite.cms.label.paymentMethod'),
               field: 'paymentName',
               format: val => val?.title ?? '-',
               align: 'left'
-            },
+            },*/
             {name: 'subtotal', label: this.$tr('iaccounting.cms.form.subtotal'), field: 'subtotal', align: 'left'},
             {name: 'total', label: this.$tr('iaccounting.cms.form.total'), field: 'total', align: 'rigth'},
             {

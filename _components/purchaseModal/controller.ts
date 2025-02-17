@@ -51,6 +51,14 @@ export default function controller(props: any, emit: any) {
             label: i18n.tr(existn8nData ? 'isite.cms.label.save' : 'isite.cms.message.uploadFile'),
           }
         })
+      } else if (props.item?.statusId == 2) {
+        actions.push({
+          action: () => refs.refForm.value.changeStep('next', true),
+          props: {
+            color: 'primary',
+            label: i18n.tr('iaccounting.cms.button.retry'),
+          }
+        })
       }
 
       //Response
@@ -69,6 +77,7 @@ export default function controller(props: any, emit: any) {
 
       const n8nData = state.n8nData
       const existItem = !!props.item?.id
+      const readOnlyField = !!existItem && props.item?.statusId != 2;
 
       let description = '';
 
@@ -147,7 +156,7 @@ export default function controller(props: any, emit: any) {
               (val: any) => !!val || i18n.tr('isite.cms.message.fieldRequired')
             ],
             clearable: true,
-            readonly: existItem
+            readonly: readOnlyField
           },
           config: {
             filterByQuery: true,
@@ -164,29 +173,29 @@ export default function controller(props: any, emit: any) {
 
         documentType: {
           value: 0,
-          type: 'select',
+          /*type: 'select',
           required: true,
           vIf: validations,
           props: {
             label: `${i18n.tr('iaccounting.cms.form.documentType')}*`,
-            readonly: existItem
+            readonly: readOnlyField
           },
           loadOptions: {
             apiRoute: 'apiRoutes.qaccounting.documentTypes',
-          }
+          }*/
         },
         paymentMethodId: {
           value: 0,
-          type: 'select',
+          /*type: 'select',
           required: true,
           vIf: validations,
           props: {
             label: `${i18n.tr('isite.cms.label.paymentMethod')}*`,
-            readonly: existItem
+            readonly: readOnlyField
           },
           loadOptions: {
             apiRoute: 'apiRoutes.qaccounting.paymentMethods',
-          }
+          }*/
         },
 
 
@@ -195,8 +204,9 @@ export default function controller(props: any, emit: any) {
           type: 'date',
           vIf: validations,
           props: {
+            mask: readOnlyField ? 'YYYY/MM/DD' : 'YYYY-MM-DD',
             label: i18n.tr('iaccounting.cms.form.elaborationDate') + '*',
-            readonly: existItem,
+            readonly: readOnlyField,
             rules: [
               (val: any) => !!val || i18n.tr('isite.cms.message.fieldRequired')
             ]
@@ -204,12 +214,13 @@ export default function controller(props: any, emit: any) {
         },
         currencyCode: {
           value: 'COP',
-          type: 'input',
+          colClass: 'hidden',
+          /*type: 'input',
           vIf: validations,
           props: {
             label: i18n.tr('iaccounting.cms.form.currencyCode'),
-            readonly: existItem,
-          }
+            readonly: readOnlyField,
+          }*/
         },
 
         totalTax: {
@@ -220,10 +231,10 @@ export default function controller(props: any, emit: any) {
           props: {
             type: 'number',
             label: i18n.tr('iaccounting.cms.form.totalTax'),
-            readonly: existItem,
+            readonly: readOnlyField,
           }
         },
-        discount: {
+        /*discount: {
           value: 0,
           type: 'input',
           fakeFieldName: 'options',
@@ -231,9 +242,9 @@ export default function controller(props: any, emit: any) {
           props: {
             type: 'number',
             label: i18n.tr('iaccounting.cms.form.discount'),
-            readonly: existItem,
+            readonly: readOnlyField,
           }
-        },
+        },*/
 
         subtotal: {
           value: 0,
@@ -242,7 +253,7 @@ export default function controller(props: any, emit: any) {
           props: {
             type: 'number',
             label: i18n.tr('iaccounting.cms.form.subtotal'),
-            readonly: existItem,
+            readonly: readOnlyField,
           }
         },
         total: {
@@ -252,7 +263,7 @@ export default function controller(props: any, emit: any) {
           props: {
             type: 'number',
             label: i18n.tr('iaccounting.cms.form.total'),
-            readonly: existItem,
+            readonly: readOnlyField,
           }
         },
 
@@ -268,15 +279,16 @@ export default function controller(props: any, emit: any) {
             fields: {
               type: {
                 value: 'Account',
-                type: 'select',
+                colClass: 'hidden',
+                /*type: 'select',
                 colClass: "col-6",
                 props: {
                   label: i18n.tr('isite.cms.form.type'),
-                  readonly: existItem,
+                  readonly: readOnlyField,
                   options: [
                     {label: i18n.tr('iaccounting.cms.label.account'), value: 'Account'}
                   ]
-                },
+                },*/
               },
               code: {
                 value: null,
@@ -284,36 +296,46 @@ export default function controller(props: any, emit: any) {
                 colClass: "col-6",
                 required: true,
                 props: {
-                  readonly: existItem,
+                  readonly: readOnlyField,
                   label: i18n.tr('isite.cms.label.code')
                 }
               },
               quantity: {
                 value: 0,
                 type: 'input',
-                colClass: "col-3",
+                colClass: "col-6",
                 props: {
                   type: 'number',
-                  readonly: existItem,
+                  readonly: readOnlyField,
                   label: i18n.tr('isite.cms.label.quantity')
                 }
               },
               description: {
                 value: null,
                 type: 'input',
-                colClass: "col-6",
+                colClass: "col-12 col-md-6",
                 props: {
-                  readonly: existItem,
+                  readonly: readOnlyField,
                   label: i18n.tr('isite.cms.label.description')
+                }
+              },
+              iva: {
+                value: null,
+                type: 'input',
+                colClass: "col-6 col-md-3",
+                props: {
+                  type: 'number',
+                  readonly: readOnlyField,
+                  label: i18n.tr('iaccounting.cms.label.taxPercentage')
                 }
               },
               price: {
                 value: 0,
                 type: 'input',
-                colClass: "col-3",
+                colClass: "col-6 col-md-3",
                 props: {
                   type: 'number',
-                  readonly: existItem,
+                  readonly: readOnlyField,
                   label: i18n.tr('isite.cms.label.price')
                 }
               },
@@ -336,11 +358,7 @@ export default function controller(props: any, emit: any) {
           },
           getFiles: (item: any) => {
             const file = item[0] || null
-            if (!file) return
-
-            if (state.extensionDocs.includes(file.extension)) file.url = `https://view.officeapps.live.com/op/view.aspx?src=${file.url}`
-
-            state.file = file
+            methods.setImage(file);
           }
         }
       }
@@ -392,18 +410,44 @@ export default function controller(props: any, emit: any) {
         })
       }
     },
+    updateItem: () => {
+      const data = state.formData
+      if (data) {
+        state.loading = true
+        //Update purchase
+        service.updateItem(props.item.id, data).then(() => {
+          alert.info({message: i18n.tr('isite.cms.message.recordUpdated')});
+          //Emit info to Editor and Close Modal
+          emit('create')
+          methods.closeModal()
+        }).catch(() => {
+          alert.error({message: i18n.tr('isite.cms.message.recordNoUpdated')});
+          state.loading = false
+        })
+      }
+    },
     closeModal() {
       state.show = false
       state.formData = null;
       state.loading = false;
-      state.n8nData = null
+      state.n8nData = null;
+      state.file = null;
     },
     setItem() {
-      if (props.item) state.formData = props.item
+      if (props.item) {
+        state.formData = props.item
+        if(props.item?.statusId == 2) methods.setImage(props.item.mediaFiles.mainimage);
+      }
     },
     callMethods() {
-      if (!state.n8nData) methods.sendImage()
+      if (props.item) methods.updateItem()
+      else if (!state.n8nData) methods.sendImage()
       else methods.createItem()
+    },
+    setImage(file = null) {
+      if (!file) return
+      if (state.extensionDocs.includes(file.extension)) file.url = `https://view.officeapps.live.com/op/view.aspx?src=${file.url}`
+      state.file = file
     }
   }
 

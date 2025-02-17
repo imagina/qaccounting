@@ -1,10 +1,10 @@
 <template>
   <master-modal id="purchaseModal" v-model="show" custom-position v-bind="modalProps" @hide="closeModal">
     <div class="row">
-      <dynamic-form :class="`col-12 ${!!n8nData && !!file ? 'col-md-6' : ''}`" v-model="formData" :blocks="fields" hide-progress-bar no-actions ref="refForm" @submit="callMethods"
+      <dynamic-form :class="`col-12 ${!!file ? 'col-md-6' : ''}`" v-model="formData" :blocks="fields" hide-progress-bar no-actions ref="refForm" @submit="callMethods"
                     no-reset-with-blocks-update/>
 
-      <div v-if="!!n8nData && file" id="showFile" class="col-6">
+      <div v-if="file" id="showFile" class="col-6">
         <preview-file :url="file.url" :extension="file.extension"
                       :img-props="{height: 'calc(100vh - 200px)', class:'img-file full-height'}" />
       </div>
