@@ -330,7 +330,7 @@ export default function controller(props: any, emit: any) {
           props: {
             label: i18n.tr('iaccounting.cms.form.documentAnalysis'),
             zone: 'mainimage',
-            entity: "Modules\\Iaccounting\\Entities\\Purchase",
+            entity: "Modules\\Iaccounting\\Models\\Purchase",
             entityId: null,
             readonly: existItem
           },
